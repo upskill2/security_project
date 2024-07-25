@@ -1,0 +1,14 @@
+logging:
+  level:
+    org:
+        springframework:
+          security: ${SPRING_SECURITY_LOG_LEVEL:TRACE}
+
+  pattern:
+    console: ${LOG_PATTERN_CONSOLE:%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %magenta(%logger{15}) - %msg%n}
+
+spring:
+  security:
+    user:
+      name: ${SECURITY_USER_NAME:admin}
+      password: ${SECURITY_USER_PASSWORD:admin}
