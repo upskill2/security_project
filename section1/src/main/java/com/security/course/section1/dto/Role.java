@@ -1,4 +1,4 @@
-package com.security.course.section1.model;
+package com.security.course.section1.dto;
 
 import lombok.Getter;
 

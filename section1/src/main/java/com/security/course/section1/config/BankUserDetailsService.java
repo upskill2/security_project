@@ -1,7 +1,6 @@
 package com.security.course.section1.config;
 
 import com.security.course.section1.model.Customer;
-import com.security.course.section1.model.Role;
 import com.security.course.section1.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

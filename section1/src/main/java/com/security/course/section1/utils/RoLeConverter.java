@@ -1,5 +1,6 @@
-package com.security.course.section1.model;
+package com.security.course.section1.utils;
 
+import com.security.course.section1.dto.Role;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

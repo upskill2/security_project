@@ -1,5 +1,6 @@
 package com.security.course.section1.model;
 
+import com.security.course.section1.dto.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

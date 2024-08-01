@@ -1,4 +1,4 @@
-package com.security.course.section1.controller;
+package com.security.course.section1.controller.bank;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
