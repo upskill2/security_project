@@ -49,10 +49,10 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager (user, admin);
     }*/
 
-    @Bean
+/*    @Bean
     public UserDetailsService userDetailsService (DataSource dataSource) {
         return new JdbcUserDetailsManager (dataSource);
-    }
+    }*/
 
     @Bean
     public PasswordEncoder passwordEncoder () {
