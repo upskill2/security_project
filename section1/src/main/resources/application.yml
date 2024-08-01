@@ -1,14 +1,46 @@
 logging:
   level:
+    ROOT: INFO
     org:
-        springframework:
-          security: ${SPRING_SECURITY_LOG_LEVEL:TRACE}
+      springframework:
+        web: DEBUG
+        security: ${SPRING_SECURITY_LOG_LEVEL:TRACE}
 
   pattern:
     console: ${LOG_PATTERN_CONSOLE:%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %magenta(%logger{15}) - %msg%n}
 
+      # Works only for 1 user in memory
+      #spring:
+      #security:
+      #user:
+      #name: ${SECURITY_USER_NAME:admin}
+    #password: ${SECURITY_USER_PASSWORD:admin}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,mappings
+
 spring:
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  sql:
+    init:
+      mode: always
+      platform: mysql
+      data-locations: classpath:sql/data.sql
+      schema-locations: classpath:sql/schema.sql
+  datasource:
+    #separator: ^^^
+    url: jdbc:mysql://localhost:3306/bankdb
+    username: root
+    password: password
+    driver-class-name: com.mysql.jdbc.Driver
   security:
-    user:
-      name: ${SECURITY_USER_NAME:admin}
-      password: ${SECURITY_USER_PASSWORD:admin}
+    check-compromised-passwords: false
+
+
