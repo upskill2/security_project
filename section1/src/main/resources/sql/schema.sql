@@ -9,6 +9,15 @@ authority varchar(50) not null,
 constraint fk_authorities_users
 foreign key(username) references users(username));
 
+drop table customer;
+
+create table if not exists customer (
+id int not null auto_increment,
+email varchar(50) not null,
+pwd varchar(200) not null,
+role varchar(50) not null,
+primary key (id));
+
 --DROP PROCEDURE IF EXISTS `bankdb`.`CreateIndexIfNotExists` ^;
 
 /*CREATE PROCEDURE CreateIndexIfNotExists()
