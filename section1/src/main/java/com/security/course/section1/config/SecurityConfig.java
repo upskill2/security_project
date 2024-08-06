@@ -28,6 +28,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain (HttpSecurity http) throws Exception {
         http
+                .requiresChannel (r->r.anyRequest ()
+                        .requiresSecure ())
                 .csrf (AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests ((requests) -> requests
                 .requestMatchers ("/notices", "/contacts", "/actuator*", "/error", "/registerUser")
