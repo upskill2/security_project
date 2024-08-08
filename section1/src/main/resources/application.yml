@@ -1,4 +1,7 @@
 server:
+  servlet:
+    session:
+      timeout: 15m
   port: 8080
   ssl:
     key-store: keystore.p12

@@ -1,23 +1,17 @@
 package com.security.course.section1.config;
 
+import com.security.course.section1.authentication.CustomBasicAuthenticationEntryPoint;
+import com.security.course.section1.authorization.CustomAccessDeniedHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
-
-import javax.sql.DataSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -28,20 +22,28 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain (HttpSecurity http) throws Exception {
         http
-                .requiresChannel (r->r.anyRequest ()
+                .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
+                        .sessionFixation (s1 -> s1.newSession ())
+                        .maximumSessions (1)
+                        .maxSessionsPreventsLogin (true)
+                        .expiredUrl ("/expireUrl"))
+                .requiresChannel (r -> r.anyRequest ()
                         .requiresSecure ())
                 .csrf (AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests ((requests) -> requests
-                .requestMatchers ("/notices", "/contacts", "/actuator*", "/error", "/registerUser")
-                .permitAll ()
-                .requestMatchers (
-                        "/myAccount", "/myLoans", "/myCards", "/contacts")
-                .authenticated ()
-                .anyRequest ()
-                .denyAll ()
-        );
+                        .requestMatchers ("/notices", "/contacts", "/actuator*", "/error",
+                                "/registerUser", "/invalidSession", "/expireUrl")
+                        .permitAll ()
+                        .requestMatchers (
+                                "/myAccount", "/myLoans", "/myCards", "/contacts")
+                        .authenticated ()
+                        .anyRequest ()
+                        .denyAll ()
+                );
         http.formLogin (withDefaults ());
-        http.httpBasic (withDefaults ());
+        http.httpBasic (a -> a.authenticationEntryPoint (new CustomBasicAuthenticationEntryPoint ()));
+        http.exceptionHandling (e -> e.accessDeniedHandler (new CustomAccessDeniedHandler ()));
+
         return http.build ();
     }
 
