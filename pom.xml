@@ -19,6 +19,7 @@
 	</properties>
 	<modules>
 		<module>section1</module>
+		<module>eazyschool-start</module>
 	</modules>
 
 	<build>

@@ -14,7 +14,7 @@ logging:
     ROOT: INFO
     org:
       springframework:
-        web: DEBUG
+        web: INFO
         security: ${SPRING_SECURITY_LOG_LEVEL:TRACE}
 
   pattern:
