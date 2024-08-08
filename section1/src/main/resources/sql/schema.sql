@@ -9,14 +9,25 @@ authority varchar(50) not null,
 constraint fk_authorities_users
 foreign key(username) references users(username));
 
-drop table customer;
+create TABLE if not exists `customer` (
+  `customer_id` bigint AUTO_INCREMENT primary key NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `mobile_number` varchar(20) NOT NULL,
+  `pwd` varchar(500) NOT NULL,
+  `role` varchar(100) NOT NULL,
+  `create_dt` date DEFAULT NULL);
 
-create table if not exists customer (
-id int not null auto_increment,
-email varchar(50) not null,
-pwd varchar(200) not null,
-role varchar(50) not null,
-primary key (id));
+CREATE TABLE if not exists `accounts` (
+  `customer_id` bigint NOT NULL,
+  `account_number` int NOT NULL,
+  `account_type` varchar(100) NOT NULL,
+  `branch_address` varchar(200) NOT NULL,
+  `create_dt` date DEFAULT NULL,
+  PRIMARY KEY (`account_number`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE
+);
 
 --DROP PROCEDURE IF EXISTS `bankdb`.`CreateIndexIfNotExists` ^;
 

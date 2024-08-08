@@ -3,11 +3,11 @@ server:
     session:
       timeout: 15m
   port: 8080
-  ssl:
-    key-store: keystore.p12
-    key-store-password: 123456
-    keyStoreType: PKCS12
-    keyAlias: tomcat
+  #ssl:
+    #key-store: keystore.p12
+    #key-store-password: 123456
+    #keyStoreType: PKCS12
+    #keyAlias: tomcat
 
 logging:
   level:
@@ -32,6 +32,13 @@ management:
     web:
       exposure:
         include: info,health,mappings
+
+web:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    allow-credentials: true
 
 spring:
   jpa:

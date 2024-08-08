@@ -1,5 +1,6 @@
 package com.security.course.section1.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.course.section1.authentication.CustomBasicAuthenticationEntryPoint;
 import com.security.course.section1.authorization.CustomAccessDeniedHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -12,6 +13,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -22,13 +25,15 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain (HttpSecurity http) throws Exception {
         http
+               // .cors (withDefaults ())
                 .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
                         .sessionFixation (s1 -> s1.newSession ())
                         .maximumSessions (1)
                         .maxSessionsPreventsLogin (true)
                         .expiredUrl ("/expireUrl"))
                 .requiresChannel (r -> r.anyRequest ()
-                        .requiresSecure ())
+                        .requiresInsecure ())
+                       //.requiresSecure ())
                 .csrf (AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests ((requests) -> requests
                         .requestMatchers ("/notices", "/contacts", "/actuator*", "/error",
@@ -45,6 +50,26 @@ public class SecurityConfig {
         http.exceptionHandling (e -> e.accessDeniedHandler (new CustomAccessDeniedHandler ()));
 
         return http.build ();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer () {
+        return new WebMvcConfigurer () {
+            @Override
+            public void addCorsMappings (CorsRegistry registry) {
+                registry.addMapping ("/**")
+                        .allowedOrigins ("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE")
+                        .allowedHeaders("Accept", "X-Access-Token", "X-Application-Name", "X-Request-Sent-Time")
+                        .allowCredentials (false)
+                        .maxAge (3600);
+            }
+        };
+    }
+
+    @Bean
+    public ObjectMapper objectMapper () {
+        return new ObjectMapper ();
     }
 
 /*    @Bean
