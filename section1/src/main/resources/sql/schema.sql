@@ -9,7 +9,9 @@ authority varchar(50) not null,
 constraint fk_authorities_users
 foreign key(username) references users(username));
 
+drop table account_transactions cascade;
 drop table accounts cascade;
+drop table loans cascade;
 drop table cards cascade;
 drop table notice_details cascade;
 drop table contact_messages cascade;
@@ -34,6 +36,36 @@ CREATE TABLE if not exists `accounts` (
   PRIMARY KEY (`account_number`),
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `account_transactions` (
+  `transaction_id` varchar(200) NOT NULL,
+  `account_number` int NOT NULL,
+  `customer_id` bigint NOT NULL,
+  `transaction_dt` date NOT NULL,
+  `transaction_summary` varchar(200) NOT NULL,
+  `transaction_type` varchar(100) NOT NULL,
+  `transaction_amt` int NOT NULL,
+  `closing_balance` int NOT NULL,
+  `create_dt` date DEFAULT NULL,
+  PRIMARY KEY (`transaction_id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `account_number` (`account_number`),
+  CONSTRAINT `accounts_ibfk_2` FOREIGN KEY (`account_number`) REFERENCES `accounts` (`account_number`) ON DELETE CASCADE,
+  CONSTRAINT `acct_user_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE);
+
+CREATE TABLE `loans` (
+  `loan_number` int NOT NULL AUTO_INCREMENT,
+  `customer_id` bigint NOT NULL,
+  `start_dt` date NOT NULL,
+  `loan_type` varchar(100) NOT NULL,
+  `total_loan` int NOT NULL,
+  `amount_paid` int NOT NULL,
+  `outstanding_amount` int NOT NULL,
+  `create_dt` date DEFAULT NULL,
+  PRIMARY KEY (`loan_number`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `loan_customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE
 );
 
 CREATE TABLE if not exists `cards` (
