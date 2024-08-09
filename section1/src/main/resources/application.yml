@@ -51,8 +51,8 @@ spring:
     init:
       mode: always
       platform: mysql
-      data-locations: classpath:sql/data.sql
-      schema-locations: classpath:sql/schema.sql
+      #data-locations: classpath:sql/data.sql
+      #schema-locations: classpath:sql/schema.sql
   datasource:
     #separator: ^^^
     url: jdbc:mysql://localhost:3306/bankdb

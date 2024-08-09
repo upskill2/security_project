@@ -29,4 +29,7 @@ public class Customer {
 
     @OneToMany (fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Accounts> accounts;
+
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<AccountTransactions> accountTransactions;
 }

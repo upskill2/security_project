@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,8 +16,12 @@ public class Accounts {
     @JoinColumn (name = "customer_id")
     private Customer customer;
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "account_number")
     private int accountNumber;
+    @OneToMany
+    @PrimaryKeyJoinColumn
+    private List<AccountTransactions> accountTransactions;
     private String accountType;
     private String branchAddress;
     @Column (name = "create_dt")
