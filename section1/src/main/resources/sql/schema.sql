@@ -9,14 +9,21 @@ authority varchar(50) not null,
 constraint fk_authorities_users
 foreign key(username) references users(username));
 
-create TABLE if not exists `customer` (
-  `customer_id` bigint AUTO_INCREMENT primary key NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `mobile_number` varchar(20) NOT NULL,
-  `pwd` varchar(500) NOT NULL,
-  `role` varchar(100) NOT NULL,
-  `create_dt` date DEFAULT NULL);
+drop table accounts cascade;
+drop table cards cascade;
+drop table notice_details cascade;
+drop table contact_messages cascade;
+drop table customer cascade;
+
+CREATE TABLE if not exists customer (
+  customer_id bigint NOT NULL AUTO_INCREMENT,
+  name varchar(100) NOT NULL,
+  email varchar(100) NOT NULL,
+  mobile_number varchar(20) NOT NULL,
+  pwd varchar(500) NOT NULL,
+  role varchar(100) NOT NULL,
+  create_dt date DEFAULT NULL,
+  PRIMARY KEY (customer_id));
 
 CREATE TABLE if not exists `accounts` (
   `customer_id` bigint NOT NULL,
@@ -27,6 +34,41 @@ CREATE TABLE if not exists `accounts` (
   PRIMARY KEY (`account_number`),
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE if not exists `cards` (
+  `card_id` int NOT NULL AUTO_INCREMENT,
+  `card_number` varchar(100) NOT NULL,
+  `customer_id` bigint NOT NULL,
+  `card_type` varchar(100) NOT NULL,
+  `total_limit` int NOT NULL,
+  `amount_used` int NOT NULL,
+  `available_amount` int NOT NULL,
+  `create_dt` date DEFAULT NULL,
+  PRIMARY KEY (`card_id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `card_customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE);
+
+
+CREATE TABLE if not exists `notice_details` (
+  `notice_id` int NOT NULL AUTO_INCREMENT,
+  `notice_summary` varchar(200) NOT NULL,
+  `notice_details` varchar(500) NOT NULL,
+  `notic_beg_dt` date NOT NULL,
+  `notic_end_dt` date DEFAULT NULL,
+  `create_dt` date DEFAULT NULL,
+  `update_dt` date DEFAULT NULL,
+  PRIMARY KEY (`notice_id`)
+);
+
+CREATE TABLE if not exists `contact_messages` (
+  `contact_id` varchar(50) NOT NULL,
+  `contact_name` varchar(50) NOT NULL,
+  `contact_email` varchar(100) NOT NULL,
+  `subject` varchar(500) NOT NULL,
+  `message` varchar(2000) NOT NULL,
+  `create_dt` date DEFAULT NULL,
+  PRIMARY KEY (`contact_id`)
 );
 
 --DROP PROCEDURE IF EXISTS `bankdb`.`CreateIndexIfNotExists` ^;
