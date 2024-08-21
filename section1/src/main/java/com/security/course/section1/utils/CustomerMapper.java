@@ -3,6 +3,7 @@ package com.security.course.section1.utils;
 import com.security.course.section1.dto.CustomerRequest;
 import com.security.course.section1.dto.CustomerResponse;
 import com.security.course.section1.model.Customer;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Mapper (componentModel = "spring")
+@Mapper (componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 //@Component
 public abstract class CustomerMapper {
 

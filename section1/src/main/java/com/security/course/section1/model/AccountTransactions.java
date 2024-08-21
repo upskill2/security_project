@@ -13,7 +13,8 @@ import java.util.UUID;
 public class AccountTransactions {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.UUID)
+    @GeneratedValue (generator = "UUID")
+    @Column (name = "transaction_id", columnDefinition = "varchar(255)")
     private UUID transactionId;
     @ManyToOne
     @JoinColumn (name = "account_number", nullable = false)
