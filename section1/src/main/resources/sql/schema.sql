@@ -30,7 +30,7 @@ CREATE TABLE if not exists customer (
 
 CREATE TABLE if not exists `accounts` (
   `customer_id` bigint NOT NULL,
-  `account_number` int NOT NULL,
+  `account_number` bigint NOT NULL,
   `account_type` varchar(100) NOT NULL,
   `branch_address` varchar(200) NOT NULL,
   `create_dt` date DEFAULT NULL,
@@ -40,8 +40,8 @@ CREATE TABLE if not exists `accounts` (
 );
 
 CREATE TABLE `account_transactions` (
-  `transaction_id` varchar(200) NOT NULL,
-  `account_number` int NOT NULL,
+  `transaction_id` varchar(255) NOT NULL,
+  `account_number` bigint NOT NULL,
   `customer_id` bigint NOT NULL,
   `transaction_dt` date NOT NULL,
   `transaction_summary` varchar(200) NOT NULL,

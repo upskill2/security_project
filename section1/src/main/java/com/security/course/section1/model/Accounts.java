@@ -12,13 +12,13 @@ import java.util.List;
 @Setter
 public class Accounts {
 
-    @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn (name = "customer_id")
-    private Customer customer;
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "account_number")
-    private int accountNumber;
+    private long accountNumber;
+    @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn (name = "customer_id")
+    private Customer customer;
     @OneToMany
     @PrimaryKeyJoinColumn
     private List<AccountTransactions> accountTransactions;

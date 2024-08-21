@@ -32,4 +32,10 @@ public class Customer {
 
     @OneToMany (fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
     private List<AccountTransactions> accountTransactions;
+
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Cards> cards;
+
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Loans> loans;
 }
