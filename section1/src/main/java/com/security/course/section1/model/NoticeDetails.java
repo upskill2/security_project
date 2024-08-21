@@ -3,6 +3,8 @@ package com.security.course.section1.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -20,8 +22,10 @@ public class NoticeDetails {
     private LocalDateTime noticeBeginDate;
     @Column (name = "notic_end_dt")
     private LocalDateTime noticeEndDate;
+    @CreationTimestamp
     @Column (name = "create_dt")
     private LocalDateTime createdDate;
+    @UpdateTimestamp
     @Column (name = "update_dt")
     private LocalDateTime updatedDate;
 }

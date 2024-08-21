@@ -3,6 +3,7 @@ package com.security.course.section1.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,7 @@ public class Loans {
     private double totalLoan;
     private double amountPaid;
     private double outstandingAmount;
+    @CreationTimestamp
     @Column (name = "create_dt")
     private LocalDateTime createdDate;
 

@@ -1,9 +1,11 @@
 package com.security.course.section1.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.security.course.section1.dto.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,9 +21,11 @@ public class Customer {
 
     private String name;
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String pwd;
     private String mobileNumber;
 
+    @CreationTimestamp
     @Column (name = "create_dt")
     private LocalDateTime createdDate;
 

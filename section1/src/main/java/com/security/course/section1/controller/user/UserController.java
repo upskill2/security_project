@@ -8,9 +8,13 @@ import com.security.course.section1.service.CustomerService;
 import com.security.course.section1.utils.CustomerMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -43,6 +47,11 @@ public class UserController {
 
     private Customer toCustomer (CustomerRequest customerRequest) {
         return mapper.toCustomer (customerRequest);
+    }
+
+    @RequestMapping ("/user")
+    public Customer getUserDetailsAfterLogin (Authentication authentication) {
+        return service.findByEmail (authentication.getName ()).orElse (null);
     }
 
 }
