@@ -9,13 +9,14 @@ authority varchar(50) not null,
 constraint fk_authorities_users
 foreign key(username) references users(username));
 
-drop table account_transactions cascade;
-drop table accounts cascade;
-drop table loans cascade;
-drop table cards cascade;
-drop table notice_details cascade;
-drop table contact_messages cascade;
-drop table customer cascade;
+drop table if exists accounts_account_transactions cascade;
+drop table if exists account_transactions cascade;
+drop table if exists accounts cascade;
+drop table if exists loans cascade;
+drop table if exists cards cascade;
+drop table if exists notice_details cascade;
+drop table if exists contact_messages cascade;
+drop table if exists customer cascade;
 
 CREATE TABLE if not exists customer (
   customer_id bigint NOT NULL AUTO_INCREMENT,
