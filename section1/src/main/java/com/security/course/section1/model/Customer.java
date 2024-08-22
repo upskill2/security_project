@@ -1,5 +1,6 @@
 package com.security.course.section1.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.security.course.section1.dto.Role;
 import jakarta.persistence.*;
@@ -28,6 +29,7 @@ public class Customer {
 
     @CreationTimestamp
     @Column (name = "create_dt")
+    @JsonFormat (pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdDate;
 
     private Role role;

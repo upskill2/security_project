@@ -1,6 +1,8 @@
 package com.security.course.section1.config;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.security.course.section1.authentication.CustomBasicAuthenticationEntryPoint;
 import com.security.course.section1.authorization.CustomAccessDeniedHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,7 +27,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain (HttpSecurity http) throws Exception {
         http
-               // .cors (withDefaults ())
+                // .cors (withDefaults ())
                 .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
                         .sessionFixation (s1 -> s1.newSession ())
                         .maximumSessions (1)
@@ -33,7 +35,7 @@ public class SecurityConfig {
                         .expiredUrl ("/expireUrl"))
                 .requiresChannel (r -> r.anyRequest ()
                         .requiresInsecure ())
-                       //.requiresSecure ())
+                //.requiresSecure ())
                 .csrf (AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests ((requests) -> requests
                         .requestMatchers ("/notices", "/contacts", "/actuator*", "/error",
@@ -59,8 +61,8 @@ public class SecurityConfig {
             public void addCorsMappings (CorsRegistry registry) {
                 registry.addMapping ("/**")
                         .allowedOrigins ("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE")
-                        .allowedHeaders("Accept", "X-Access-Token", "X-Application-Name", "X-Request-Sent-Time")
+                        .allowedMethods ("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE")
+                        .allowedHeaders ("Accept", "X-Access-Token", "X-Application-Name", "X-Request-Sent-Time")
                         .allowCredentials (false)
                         .maxAge (3600);
             }
@@ -69,7 +71,9 @@ public class SecurityConfig {
 
     @Bean
     public ObjectMapper objectMapper () {
-        return new ObjectMapper ();
+        ObjectMapper mapper = new ObjectMapper ();
+        mapper.registerModule (new JavaTimeModule ());
+        return mapper;
     }
 
 /*    @Bean

@@ -1,5 +1,6 @@
 package com.security.course.section1.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Cards {
     private double availableAmount;
     @CreationTimestamp
     @Column (name = "create_dt")
+    @JsonFormat (pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdDate;
 
 }
