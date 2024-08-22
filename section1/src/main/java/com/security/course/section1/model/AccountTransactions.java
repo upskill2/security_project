@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,7 +18,8 @@ public class AccountTransactions {
 
     @Id
     @GeneratedValue (generator = "UUID")
-    @Column (name = "transaction_id", columnDefinition = "varchar(255)")
+    @Column (name = "transaction_id", columnDefinition = "char(36)")
+    @JdbcTypeCode (SqlTypes.CHAR)
     private UUID transactionId;
     @ManyToOne
     @JoinColumn (name = "account_number", nullable = false)

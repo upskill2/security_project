@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,7 +17,9 @@ import java.util.UUID;
 public class ContactMessages {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column (name = "contact_id", columnDefinition = "char(36)")
+    @JdbcTypeCode (SqlTypes.CHAR)
     private UUID contactId;
     private String contactName;
     private String contactEmail;

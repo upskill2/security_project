@@ -58,7 +58,7 @@ public class SecurityConfig {
                                 "/registerUser", "/invalidSession", "/expireUrl")
                         .permitAll ()
                         .requestMatchers (
-                                "/myAccount", "/myLoans", "/myCards", "/contacts", "/user")
+                                "/myAccount", "/myLoans", "/myCards", "/user")
                         .authenticated ()
                         .anyRequest ()
                         .denyAll ()

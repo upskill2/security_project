@@ -41,7 +41,7 @@ CREATE TABLE if not exists `accounts` (
 );
 
 CREATE TABLE `account_transactions` (
-  `transaction_id` varchar(255) NOT NULL,
+  `transaction_id` char(36) NOT NULL,
   `account_number` bigint NOT NULL,
   `customer_id` bigint NOT NULL,
   `transaction_dt` date NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE if not exists `notice_details` (
 );
 
 CREATE TABLE if not exists `contact_messages` (
-  `contact_id` varchar(50) NOT NULL,
+  `contact_id` char(36) NOT NULL,
   `contact_name` varchar(50) NOT NULL,
   `contact_email` varchar(100) NOT NULL,
   `subject` varchar(500) NOT NULL,
