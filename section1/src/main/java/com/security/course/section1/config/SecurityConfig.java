@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.security.course.section1.authentication.CustomBasicAuthenticationEntryPoint;
 import com.security.course.section1.authorization.CustomAccessDeniedHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +16,12 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Collections;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -27,7 +32,18 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain (HttpSecurity http) throws Exception {
         http
-                // .cors (withDefaults ())
+                .cors (c->c.configurationSource (new CorsConfigurationSource () {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration (final HttpServletRequest request) {
+                        CorsConfiguration corsConfiguration = new CorsConfiguration ();
+                        corsConfiguration.addAllowedOriginPattern("*");
+                        corsConfiguration.setAllowedMethods (Collections.singletonList ("*"));
+                        corsConfiguration.setAllowedHeaders (Collections.singletonList ("*"));
+                        corsConfiguration.setAllowCredentials (true);
+                        corsConfiguration.setMaxAge (3600L);
+                        return corsConfiguration;
+                    }
+                }))
                 .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
                         .sessionFixation (s1 -> s1.newSession ())
                         .maximumSessions (1)
