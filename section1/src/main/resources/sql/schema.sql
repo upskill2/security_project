@@ -26,7 +26,8 @@ CREATE TABLE if not exists customer (
   pwd varchar(500) NOT NULL,
   role varchar(100) NOT NULL,
   create_dt date DEFAULT NULL,
-  PRIMARY KEY (customer_id));
+  PRIMARY KEY (customer_id),
+  unique (email));
 
 CREATE TABLE if not exists `accounts` (
   `customer_id` bigint NOT NULL,

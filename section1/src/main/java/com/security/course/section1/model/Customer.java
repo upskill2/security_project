@@ -20,6 +20,7 @@ public class Customer {
     private long customerId;
 
     private String name;
+    @Column(unique=true)
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String pwd;
