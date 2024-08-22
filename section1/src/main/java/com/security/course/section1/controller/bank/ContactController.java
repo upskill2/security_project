@@ -11,7 +11,7 @@ public class ContactController {
 
     private final CustomerService customerService;
 
-    @RequestMapping (value = "/contacts", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping (value = "/contact", method = {RequestMethod.GET, RequestMethod.POST})
     public ContactMessages getContactDetails (@RequestBody ContactMessages contact) {
         return customerService.saveContact (contact);
     }

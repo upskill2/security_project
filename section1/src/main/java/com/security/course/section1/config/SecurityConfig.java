@@ -54,7 +54,7 @@ public class SecurityConfig {
                 //.requiresSecure ())
                 .csrf (AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests ((requests) -> requests
-                        .requestMatchers ("/notices", "/contacts", "/actuator*", "/error",
+                        .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
                                 "/registerUser", "/invalidSession", "/expireUrl")
                         .permitAll ()
                         .requestMatchers (
