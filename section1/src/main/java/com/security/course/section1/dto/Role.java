@@ -5,12 +5,16 @@ import lombok.Getter;
 @Getter
 public enum Role {
 
-    ADMIN("admin"),
-    READ ("read");
+    VIEWBALANCE ("VIEWBALANCE"),
+    VIEWLOANS ("VIEWLOANS"),
+    VIEWCARDS ("VIEWCARDS"),
+    VIEWACCOUNT ("VIEWACCOUNT"),
+    ADMIN ("ADMIN"),
+    USER ("USER");
 
     private String role;
 
-    Role(String role) {
+    Role (String role) {
         this.role = role;
     }
 

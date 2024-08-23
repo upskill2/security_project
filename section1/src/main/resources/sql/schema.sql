@@ -1,13 +1,15 @@
-create table if not exists users (
+--Default Spring Security tables
+
+/*create table if not exists users (
 username varchar(50) not null primary key,
 password varchar(500) not null,
-enabled boolean not null);
+enabled boolean not null);*/
 
-create table if not exists authorities (
+/*create table if not exists authorities (
 username varchar(50) not null,
 authority varchar(50) not null,
 constraint fk_authorities_users
-foreign key(username) references users(username));
+foreign key(username) references users(username));*/
 
 drop table if exists accounts_account_transactions cascade;
 drop table if exists account_transactions cascade;
@@ -16,6 +18,7 @@ drop table if exists loans cascade;
 drop table if exists cards cascade;
 drop table if exists notice_details cascade;
 drop table if exists contact_messages cascade;
+drop table if exists authorities cascade;
 drop table if exists customer cascade;
 
 CREATE TABLE if not exists customer (
@@ -103,6 +106,15 @@ CREATE TABLE if not exists `contact_messages` (
   `message` varchar(2000) NOT NULL,
   `create_dt` date DEFAULT NULL,
   PRIMARY KEY (`contact_id`)
+);
+
+CREATE TABLE `authorities` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `customer_id` bigint NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `authorities_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
 );
 
 --DROP PROCEDURE IF EXISTS `bankdb`.`CreateIndexIfNotExists` ^;
