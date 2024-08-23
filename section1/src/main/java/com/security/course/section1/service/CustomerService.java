@@ -3,6 +3,7 @@ package com.security.course.section1.service;
 import com.security.course.section1.model.*;
 import com.security.course.section1.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class CustomerService {
     private final CardsRepository cardsRepository;
     private final NoticeRepository noticeRepository;
     private final ContactRepository contactRepository;
+    private final LoansRepository loansRepository;
 
     public Customer saveCustomer (Customer customer) {
         return customerRepository.save (customer);
@@ -44,8 +46,12 @@ public class CustomerService {
     public ContactMessages saveContact (final ContactMessages contact) {
         return contactRepository.save (contact);
     }
-
+    @EntityGraph (value = "loans-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     public Optional<Customer> findByEmail (final String name) {
         return customerRepository.findByEmail (name);
+    }
+
+    public List<Loans> getLoans (final Long customerId) {
+        return loansRepository.findByCustomerCustomerIdOrderByStartDateDesc (customerId);
     }
 }

@@ -6,8 +6,8 @@ insert ignore into users values ('admin', '{bcrypt}$2a$12$olTdFhEPhKSLUkKWmYKHCO
 insert ignore authorities values ('admin', 'admin');
 
 ----------------------------------------------
-insert ignore into customer (email,pwd,`role`,`create_dt`,`mobile_number`, `name`) values('@user.com', '{noop}password', 'read',CURDATE(),'5334122365','test');
-insert ignore into customer (email,pwd,`role`,`create_dt`,`mobile_number`,`name`) values ('@admin.com', '{bcrypt}$2a$12$olTdFhEPhKSLUkKWmYKHCOPG7XHl9NX0Wb.v.twX5emkOffXE92KO', 'admin',CURDATE(),'5334122365', 'something_1');
+insert ignore into customer (email,pwd,`role`,`create_dt`,`mobile_number`,`name`) values ('1@admin.com','{bcrypt}$2a$12$23vIWGWLiSZoT4KJABXEF.cf.CxprtOhlNtlSs0yRrNHiLYg8j8GO', 'admin',CURDATE(),'5334122365', 'something_1');
+insert ignore into customer (email,pwd,`role`,`create_dt`,`mobile_number`, `name`) values('1@user.com', '{noop}password', 'read',CURDATE(),'5334122365','test');
 
 ------------------------------------------
 insert into `accounts` (`customer_id`, `account_number`, `account_type`, `branch_address`, `create_dt`) VALUES (1, 1865764534, 'Savings', '123 Main Street,New York', CURDATE());
@@ -75,3 +75,6 @@ INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `custome
 
 INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
 `closing_balance`, `create_dt`)  VALUES (UUID(), 1865764534, 1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 'Amazon.com', 'Withdrawal', 100,34900,DATE_SUB(CURDATE(), INTERVAL 1 DAY));
+-------------------------------------------------------
+INSERT INTO `contact_messages` (`contact_id`, `contact_name`, `contact_email`, `subject`, `message`, `create_dt`) VALUES(UUID(), 'some', '1@user.com',
+'XCV-0', 'test message', DATE_SUB(CURDATE(), INTERVAL 5 DAY));

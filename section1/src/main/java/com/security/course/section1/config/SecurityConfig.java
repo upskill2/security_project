@@ -1,21 +1,24 @@
 package com.security.course.section1.config;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.security.course.section1.authentication.CustomBasicAuthenticationEntryPoint;
 import com.security.course.section1.authorization.CustomAccessDeniedHandler;
+import com.security.course.section1.filter.CsrfCookieFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -28,15 +31,16 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 public class SecurityConfig {
 
-
     @Bean
     SecurityFilterChain defaultSecurityFilterChain (HttpSecurity http) throws Exception {
+        CsrfTokenRequestAttributeHandler handler = new CsrfTokenRequestAttributeHandler ();
+
         http
-                .cors (c->c.configurationSource (new CorsConfigurationSource () {
+                .cors (c -> c.configurationSource (new CorsConfigurationSource () {
                     @Override
                     public CorsConfiguration getCorsConfiguration (final HttpServletRequest request) {
                         CorsConfiguration corsConfiguration = new CorsConfiguration ();
-                        corsConfiguration.addAllowedOriginPattern("*");
+                        corsConfiguration.addAllowedOriginPattern ("*");
                         corsConfiguration.setAllowedMethods (Collections.singletonList ("*"));
                         corsConfiguration.setAllowedHeaders (Collections.singletonList ("*"));
                         corsConfiguration.setAllowCredentials (true);
@@ -44,15 +48,22 @@ public class SecurityConfig {
                         return corsConfiguration;
                     }
                 }))
-                .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
+/*                .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
                         .sessionFixation (s1 -> s1.newSession ())
                         .maximumSessions (1)
                         .maxSessionsPreventsLogin (true)
-                        .expiredUrl ("/expireUrl"))
+                        .expiredUrl ("/expireUrl"))*/
+                .securityContext (ct->ct.requireExplicitSave (false))
+                .sessionManagement (s->s.sessionCreationPolicy (SessionCreationPolicy.ALWAYS))
                 .requiresChannel (r -> r.anyRequest ()
                         .requiresInsecure ())
                 //.requiresSecure ())
-                .csrf (AbstractHttpConfigurer::disable)
+                //    .csrf (AbstractHttpConfigurer::disable)
+                .csrf (c -> c.csrfTokenRequestHandler (handler)
+                        .ignoringRequestMatchers ("/notices", "/contact", "/actuator*", "/error",
+                                "/registerUser", "/invalidSession", "/expireUrl")
+                        .csrfTokenRepository (CookieCsrfTokenRepository.withHttpOnlyFalse ()))
+                .addFilterAfter (new CsrfCookieFilter (), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests ((requests) -> requests
                         .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
                                 "/registerUser", "/invalidSession", "/expireUrl")

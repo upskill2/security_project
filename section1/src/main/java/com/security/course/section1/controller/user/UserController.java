@@ -6,6 +6,7 @@ import com.security.course.section1.dto.CustomerResponse;
 import com.security.course.section1.model.Customer;
 import com.security.course.section1.service.CustomerService;
 import com.security.course.section1.utils.CustomerMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,18 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
     private final CustomerService service;
     private final CustomerMapper mapper;
-
-    public UserController (final CustomerService service, final CustomerMapper mapper) {
-        this.service = service;
-        this.mapper = mapper;
-    }
 
     @PostMapping (value = "/registerUser", consumes = "application/json", produces = "application/json")
     public ResponseEntity<CustomerResponse> registerUser (@RequestBody CustomerRequest customerRequest) {

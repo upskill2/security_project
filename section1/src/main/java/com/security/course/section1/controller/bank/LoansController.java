@@ -1,6 +1,7 @@
 package com.security.course.section1.controller.bank;
 
 import com.security.course.section1.model.Cards;
+import com.security.course.section1.model.Loans;
 import com.security.course.section1.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,10 @@ public class LoansController {
     private final CustomerService customerService;
 
     @GetMapping ("/myLoans")
-    public ResponseEntity<List<Cards>> getLoans (@RequestParam Long customerId) {
-        return customerService.getCards (customerId).isEmpty ()
+    public ResponseEntity<List<Loans>> getLoans (@RequestParam Long customerId) {
+        return customerService.getLoans (customerId).isEmpty ()
                 ? ResponseEntity.noContent ().build ()
-                : ResponseEntity.ok (customerService.getCards (customerId));
+                : ResponseEntity.ok (customerService.getLoans (customerId));
     }
 
 }
