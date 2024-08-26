@@ -18,6 +18,7 @@
 		<java.version>21</java.version>
 	</properties>
 	<modules>
+		<module>section2-jwt</module>
 		<module>section1</module>
 		<module>eazyschool-start</module>
 	</modules>
