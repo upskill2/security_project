@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.security.course.section1.authentication.CustomBasicAuthenticationEntryPoint;
 import com.security.course.section1.authorization.CustomAccessDeniedHandler;
+import com.security.course.section1.filter.AuthoritiesLoggingAtFilter;
+import com.security.course.section1.filter.AuthoritiesLoggingFilter;
 import com.security.course.section1.filter.CsrfCookieFilter;
+import com.security.course.section1.filter.RequestValidationFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -65,6 +68,9 @@ public class SecurityConfig {
                                 "/registerUser", "/invalidSession", "/expireUrl")
                         .csrfTokenRepository (CookieCsrfTokenRepository.withHttpOnlyFalse ()))
                 .addFilterAfter (new CsrfCookieFilter (), BasicAuthenticationFilter.class)
+                .addFilterBefore (new RequestValidationFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter (new AuthoritiesLoggingFilter (), BasicAuthenticationFilter.class)
+                .addFilterAt (new AuthoritiesLoggingAtFilter (), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests ((requests) -> requests
                         .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
                                 "/registerUser", "/invalidSession", "/expireUrl")
