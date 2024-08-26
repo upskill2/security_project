@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 @Mapper (componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 //@Component
@@ -23,6 +22,7 @@ public abstract class CustomerMapper {
     public abstract Customer toCustomer (CustomerRequest customerRequest);
 
     @Mapping (target = "status", expression = "java(com.security.course.section1.dto.CreateStatus.SUCCESS)")
+    @Mapping (target = "id", source = "customerId")
     public abstract CustomerResponse toCustomerResponse (Customer customer);
 
     @Named ("encodePassword")

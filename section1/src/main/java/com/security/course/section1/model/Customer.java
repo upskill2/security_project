@@ -43,6 +43,7 @@ public class Customer {
     @JsonFormat (pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdDate;
 
+    @JsonIgnore
     private Role role;
 
     @OneToMany (fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)

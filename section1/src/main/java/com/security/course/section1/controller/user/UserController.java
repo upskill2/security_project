@@ -45,8 +45,8 @@ public class UserController {
     }
 
     @RequestMapping ("/user")
-    public Customer getUserDetailsAfterLogin (Authentication authentication) {
-        return service.findByEmail (authentication.getName ()).orElse (null);
+    public CustomerResponse getUserDetailsAfterLogin (Authentication authentication) {
+        return mapper.toCustomerResponse (service.findByEmail (authentication.getName ()).orElse (null));
     }
 
 }

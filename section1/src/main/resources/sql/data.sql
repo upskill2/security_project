@@ -8,8 +8,7 @@
 --insert ignore authorities values ('admin', 'admin');
 
 ----------------------------------------------
-insert ignore into customer (email,pwd,`role`,`create_dt`,`mobile_number`,`name`) values ('1@admin.com','{bcrypt}$2a$12$23vIWGWLiSZoT4KJABXEF.cf
-.CxprtOhlNtlSs0yRrNHiLYg8j8GO', 'ADMIN',CURDATE(),'5334122365', 'something_1');
+insert ignore into customer (email,pwd,`role`,`create_dt`,`mobile_number`,`name`) values ('1@admin.com','{bcrypt}$2a$12$23vIWGWLiSZoT4KJABXEF.cf.CxprtOhlNtlSs0yRrNHiLYg8j8GO', 'ADMIN',CURDATE(),'5334122365', 'something_1');
 insert ignore into customer (email,pwd,`role`,`create_dt`,`mobile_number`, `name`) values('1@user.com', '{noop}password', 'USER',CURDATE(),'5334122365','test');
 
 ------------------------------------------
@@ -93,6 +92,6 @@ INSERT INTO `authorities` (`customer_id`, `name`)   VALUES (1, 'VIEWBALANCE');
 
 --DELETE FROM `authorities`;
 
--- INSERT INTO `authorities` (`customer_id`, `name`)  VALUES (1, 'USER');
+INSERT INTO `authorities` (`customer_id`, `name`)  VALUES (1, 'ROLE_USER');
 
--- INSERT INTO `authorities` (`customer_id`, `name`)  VALUES (1, 'ADMIN');
+INSERT INTO `authorities` (`customer_id`, `name`)  VALUES (1, 'ROLE_ADMIN');

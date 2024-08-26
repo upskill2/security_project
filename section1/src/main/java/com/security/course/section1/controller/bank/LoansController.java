@@ -18,7 +18,7 @@ public class LoansController {
     private final CustomerService customerService;
 
     @GetMapping ("/myLoans")
-    public ResponseEntity<List<Loans>> getLoans (@RequestParam Long customerId) {
+    public ResponseEntity<List<Loans>> getLoans (@RequestParam (name = "id") Long customerId) {
         return customerService.getLoans (customerId).isEmpty ()
                 ? ResponseEntity.noContent ().build ()
                 : ResponseEntity.ok (customerService.getLoans (customerId));

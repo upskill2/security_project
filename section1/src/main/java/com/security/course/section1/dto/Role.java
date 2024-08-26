@@ -10,7 +10,10 @@ public enum Role {
     VIEWCARDS ("VIEWCARDS"),
     VIEWACCOUNT ("VIEWACCOUNT"),
     ADMIN ("ADMIN"),
-    USER ("USER");
+    USER ("USER"),
+    ROLE_USER ("ROLE_USER"),
+    ROLE_ADMIN ("ROLE_ADMIN")
+    ;
 
     private String role;
 

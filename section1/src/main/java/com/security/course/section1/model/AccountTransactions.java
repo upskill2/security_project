@@ -1,6 +1,7 @@
 package com.security.course.section1.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,9 +24,11 @@ public class AccountTransactions {
     private UUID transactionId;
     @ManyToOne
     @JoinColumn (name = "account_number", nullable = false)
+    @JsonIgnore
     private Accounts accounts;
     @ManyToOne
     @JoinColumn (name = "customer_id", nullable = false)
+    @JsonIgnore
     private Customer customer;
     @Column (name = "transaction_dt")
     private LocalDateTime transactionDate;

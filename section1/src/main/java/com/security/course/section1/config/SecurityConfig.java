@@ -41,6 +41,7 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration (final HttpServletRequest request) {
                         CorsConfiguration corsConfiguration = new CorsConfiguration ();
                         corsConfiguration.addAllowedOriginPattern ("*");
+                        //corsConfiguration.setAllowedOrigins (Collections.singletonList ("http://localhost:4200/"));
                         corsConfiguration.setAllowedMethods (Collections.singletonList ("*"));
                         corsConfiguration.setAllowedHeaders (Collections.singletonList ("*"));
                         corsConfiguration.setAllowCredentials (true);
@@ -48,13 +49,13 @@ public class SecurityConfig {
                         return corsConfiguration;
                     }
                 }))
-/*                .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
+                .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
                         .sessionFixation (s1 -> s1.newSession ())
                         .maximumSessions (1)
                         .maxSessionsPreventsLogin (true)
-                        .expiredUrl ("/expireUrl"))*/
-                .securityContext (ct->ct.requireExplicitSave (false))
-                .sessionManagement (s->s.sessionCreationPolicy (SessionCreationPolicy.ALWAYS))
+                        .expiredUrl ("/expireUrl"))
+                .securityContext (ct -> ct.requireExplicitSave (false))
+                .sessionManagement (s -> s.sessionCreationPolicy (SessionCreationPolicy.ALWAYS))
                 .requiresChannel (r -> r.anyRequest ()
                         .requiresInsecure ())
                 //.requiresSecure ())
@@ -68,11 +69,12 @@ public class SecurityConfig {
                         .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
                                 "/registerUser", "/invalidSession", "/expireUrl")
                         .permitAll ()
-                        .requestMatchers (
-                                "/myAccount", "/myLoans", "/myCards", "/user")
-                        .authenticated ()
-                        .anyRequest ()
-                        .denyAll ()
+                                .requestMatchers("/myLoans").hasAnyRole ("USER", "ADMIN")
+                                .requestMatchers (
+                        "/myAccount", "/myBalance", "/myCards", "/user")
+                                .authenticated ()
+                   //     .anyRequest ()
+                    //    .denyAll ()
                 );
         http.formLogin (withDefaults ());
         http.httpBasic (a -> a.authenticationEntryPoint (new CustomBasicAuthenticationEntryPoint ()));

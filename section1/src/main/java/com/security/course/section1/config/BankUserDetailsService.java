@@ -27,12 +27,13 @@ public class BankUserDetailsService implements UserDetailsService {
         final List<GrantedAuthority> authorities = customer
                 .getAuthorities ()
                 .stream ().
-                map (authority -> new SimpleGrantedAuthority (authority.getRole ().name ())).collect (Collectors.toList ());
+                map (authority -> new SimpleGrantedAuthority (authority.getRole ().name ().substring (5))).collect (Collectors.toList ());
 
         return User.builder ()
                 .username (customer.getEmail ())
                 .password (customer.getPwd ())
                 .authorities (authorities)
+                .roles (customer.getAuthorities ().stream ().map (r->r.getRole ().name ().substring (5)).toArray (String[]::new))
                 .build ();
     }
 

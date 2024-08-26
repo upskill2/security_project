@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class CustomerResponse {
 
+    private long id;
     private String email;
     private CreateStatus status;
 

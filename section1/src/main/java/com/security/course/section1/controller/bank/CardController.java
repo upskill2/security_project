@@ -17,7 +17,7 @@ public class CardController {
     private final CustomerService customerService;
 
     @GetMapping ("/myCards")
-    public ResponseEntity<List<Cards>> getCardDetails (@RequestParam Long customerId) {
+    public ResponseEntity<List<Cards>> getCardDetails (@RequestParam (name = "id") Long customerId) {
         return customerService.getCards (customerId).isEmpty ()
                 ? ResponseEntity.noContent ().build ()
                 : ResponseEntity.ok (customerService.getCards (customerId));

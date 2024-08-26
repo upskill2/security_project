@@ -17,7 +17,7 @@ public class AccountController {
     private final CustomerService customerService;
 
     @GetMapping ("/myAccount")
-    public ResponseEntity<List<Accounts>> getAccountDetails (@RequestParam Long customerId) {
+    public ResponseEntity<List<Accounts>> getAccountDetails (@RequestParam (name = "id") Long customerId) {
         return customerService.getAccounts (customerId).isEmpty ()
                 ? ResponseEntity.noContent ().build ()
                 : ResponseEntity.ok (customerService.getAccounts (customerId));
