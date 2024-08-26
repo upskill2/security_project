@@ -34,7 +34,7 @@ public class BankUsernamePwdAuthenticationProvider implements AuthenticationProv
             throw new BadCredentialsException ("Invalid password");
         }
 
-        return new UsernamePasswordAuthenticationToken (username, pwd, authentication.getAuthorities ());
+        return new UsernamePasswordAuthenticationToken (username, pwd, userDetails.getAuthorities ());
     }
 
 }

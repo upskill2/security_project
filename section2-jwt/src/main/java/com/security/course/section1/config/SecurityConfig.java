@@ -4,17 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.security.course.section1.authentication.CustomBasicAuthenticationEntryPoint;
 import com.security.course.section1.authorization.CustomAccessDeniedHandler;
-import com.security.course.section1.filter.AuthoritiesLoggingAtFilter;
-import com.security.course.section1.filter.AuthoritiesLoggingFilter;
-import com.security.course.section1.filter.CsrfCookieFilter;
-import com.security.course.section1.filter.RequestValidationFilter;
+import com.security.course.section1.filter.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,6 +28,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -49,6 +51,7 @@ public class SecurityConfig {
                         corsConfiguration.setAllowedHeaders (Collections.singletonList ("*"));
                         corsConfiguration.setAllowCredentials (true);
                         corsConfiguration.setMaxAge (3600L);
+                        corsConfiguration.setExposedHeaders (Arrays.asList ("Authorization"));
                         return corsConfiguration;
                     }
                 }))
@@ -57,7 +60,7 @@ public class SecurityConfig {
                         .maximumSessions (1)
                         .maxSessionsPreventsLogin (true)
                         .expiredUrl ("/expireUrl"))
-                .securityContext (ct -> ct.requireExplicitSave (false))
+                //   .securityContext (ct -> ct.requireExplicitSave (false))
                 .sessionManagement (s -> s.sessionCreationPolicy (SessionCreationPolicy.STATELESS))
                 .requiresChannel (r -> r.anyRequest ()
                         .requiresInsecure ())
@@ -65,22 +68,24 @@ public class SecurityConfig {
                 //    .csrf (AbstractHttpConfigurer::disable)
                 .csrf (c -> c.csrfTokenRequestHandler (handler)
                         .ignoringRequestMatchers ("/notices", "/contact", "/actuator*", "/error",
-                                "/registerUser", "/invalidSession", "/expireUrl")
+                                "/registerUser", "/invalidSession", "/expireUrl", "/apiLogin")
                         .csrfTokenRepository (CookieCsrfTokenRepository.withHttpOnlyFalse ()))
                 .addFilterAfter (new CsrfCookieFilter (), BasicAuthenticationFilter.class)
-                .addFilterBefore (new RequestValidationFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore (new RequestValidationFilter (), BasicAuthenticationFilter.class)
                 .addFilterAfter (new AuthoritiesLoggingFilter (), BasicAuthenticationFilter.class)
                 .addFilterAt (new AuthoritiesLoggingAtFilter (), BasicAuthenticationFilter.class)
+                .addFilterAfter (new JwtGeneratorFilter (), BasicAuthenticationFilter.class)
+                .addFilterBefore (new JwtTokenValidationFilter (), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests ((requests) -> requests
-                        .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
-                                "/registerUser", "/invalidSession", "/expireUrl")
-                        .permitAll ()
-                                .requestMatchers("/myLoans").hasAnyRole ("USER", "ADMIN")
+                                .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
+                                        "/registerUser", "/invalidSession", "/expireUrl","/apiLogin")
+                                .permitAll ()
+                                .requestMatchers ("/myLoans").hasAnyRole ("USER", "ADMIN")
                                 .requestMatchers (
-                        "/myAccount", "/myBalance", "/myCards", "/user")
+                                        "/myAccount", "/myBalance", "/myCards", "/user")
                                 .authenticated ()
-                   //     .anyRequest ()
-                    //    .denyAll ()
+                        //     .anyRequest ()
+                        //    .denyAll ()
                 );
         http.formLogin (withDefaults ());
         http.httpBasic (a -> a.authenticationEntryPoint (new CustomBasicAuthenticationEntryPoint ()));
@@ -109,6 +114,14 @@ public class SecurityConfig {
         ObjectMapper mapper = new ObjectMapper ();
         mapper.registerModule (new JavaTimeModule ());
         return mapper;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager (UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        BankUsernamePwdAuthenticationProvider authenticationProvider = new BankUsernamePwdAuthenticationProvider (userDetailsService, passwordEncoder);
+        ProviderManager manager = new ProviderManager (authenticationProvider);
+        manager.setEraseCredentialsAfterAuthentication (false);
+        return manager;
     }
 
 /*    @Bean
