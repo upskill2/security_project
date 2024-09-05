@@ -21,6 +21,7 @@
 		<module>section2-jwt</module>
 		<module>section1</module>
 		<module>eazyschool-start</module>
+		<module>security-oauth2</module>
 	</modules>
 
 	<build>

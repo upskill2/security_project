@@ -1,0 +1,21 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ${GITHUB_CLIENT_ID:default}
+            clientSecret: ${GITHUB_CLIENT_SECRET:default}
+    user:
+      name: 1@admin.com
+      password: password
+  application:
+    name: security-oauth2
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+  level:
+    org:
+      springframework:
+        security: TRACE
