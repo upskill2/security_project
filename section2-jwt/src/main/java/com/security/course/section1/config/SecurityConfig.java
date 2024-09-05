@@ -78,11 +78,12 @@ public class SecurityConfig {
                 .addFilterBefore (new JwtTokenValidationFilter (), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests ((requests) -> requests
                                 .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
-                                        "/registerUser", "/invalidSession", "/expireUrl","/apiLogin")
+                                        "/registerUser", "/invalidSession", "/expireUrl", "/apiLogin")
                                 .permitAll ()
-                                .requestMatchers ("/myLoans").hasAnyRole ("USER", "ADMIN")
+                                .requestMatchers ("/myBalance").hasAnyRole ("USER", "ADMIN")
+                                .requestMatchers ("/myLoans").authenticated ()
                                 .requestMatchers (
-                                        "/myAccount", "/myBalance", "/myCards", "/user")
+                                        "/myAccount", "/myCards", "/user")
                                 .authenticated ()
                         //     .anyRequest ()
                         //    .denyAll ()

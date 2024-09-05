@@ -39,7 +39,8 @@ public class JwtTokenValidationFilter extends OncePerRequestFilter {
                         .parseSignedClaims (jwt)
                         .getPayload ();
                 String username = String.valueOf (claims.get ("username"));
-                String authorities = String.valueOf (claims.get ("authorities")) == null ? "ADMIN" : String.valueOf (claims.get ("authorities"));
+                final String claimAuthorities = String.valueOf (claims.get ("authorities"));
+                String authorities = claimAuthorities == null || claimAuthorities.isEmpty () ? "ADMIN" : claimAuthorities;
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken (username, null,
                         AuthorityUtils.commaSeparatedStringToAuthorityList (authorities));
