@@ -55,7 +55,7 @@ spring:
       schema-locations: classpath:sql/schema.sql
   datasource:
     #separator: ^^^
-    url: jdbc:mysql://localhost:3306/keycloak
+    url: jdbc:mysql://localhost:3306/bankdb
     username: ${DB_USER:root}
     password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.jdbc.Driver
