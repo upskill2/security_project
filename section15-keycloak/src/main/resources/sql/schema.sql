@@ -16,17 +16,17 @@ CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON bankdb.* TO 'user'@'%';
 FLUSH PRIVILEGES;
 
-drop table if exists accounts_account_transactions cascade;
-drop table if exists account_transactions cascade;
-drop table if exists accounts cascade;
-drop table if exists loans cascade;
-drop table if exists cards cascade;
-drop table if exists notice_details cascade;
-drop table if exists contact_messages cascade;
-drop table if exists authorities cascade;
-drop table if exists customer cascade;
+drop table if exists bankdb.accounts_account_transactions cascade;
+drop table if exists bankdb.account_transactions cascade;
+drop table if exists bankdb.accounts cascade;
+drop table if exists bankdb.loans cascade;
+drop table if exists bankdb.cards cascade;
+drop table if exists bankdb.notice_details cascade;
+drop table if exists bankdb.contact_messages cascade;
+drop table if exists bankdb.authorities cascade;
+drop table if exists bankdb.customer cascade;
 
-CREATE TABLE if not exists customer (
+CREATE TABLE if not exists bankdb.customer (
   customer_id bigint NOT NULL AUTO_INCREMENT,
   name varchar(100) NOT NULL,
   email varchar(100) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE if not exists customer (
   PRIMARY KEY (customer_id),
   unique (email));
 
-CREATE TABLE if not exists `accounts` (
+CREATE TABLE if not exists `bankdb`.`accounts` (
   `customer_id` bigint NOT NULL,
   `account_number` bigint NOT NULL,
   `account_type` varchar(100) NOT NULL,
@@ -45,10 +45,10 @@ CREATE TABLE if not exists `accounts` (
   `create_dt` date DEFAULT NULL,
   PRIMARY KEY (`account_number`),
   KEY `customer_id` (`customer_id`),
-  CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE
+  CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `bankdb`.`customer` (`customer_id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `account_transactions` (
+CREATE TABLE `bankdb`.`account_transactions` (
   `transaction_id` char(36) NOT NULL,
   `account_number` bigint NOT NULL,
   `customer_id` bigint NOT NULL,
@@ -61,10 +61,10 @@ CREATE TABLE `account_transactions` (
   PRIMARY KEY (`transaction_id`),
   KEY `customer_id` (`customer_id`),
   KEY `account_number` (`account_number`),
-  CONSTRAINT `accounts_ibfk_2` FOREIGN KEY (`account_number`) REFERENCES `accounts` (`account_number`) ON DELETE CASCADE,
-  CONSTRAINT `acct_user_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE);
+  CONSTRAINT `accounts_ibfk_2` FOREIGN KEY (`account_number`) REFERENCES `bankdb`.`accounts` (`account_number`) ON DELETE CASCADE,
+  CONSTRAINT `acct_user_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `bankdb`.`customer` (`customer_id`) ON DELETE CASCADE);
 
-CREATE TABLE `loans` (
+CREATE TABLE `bankdb`.`loans` (
   `loan_number` int NOT NULL AUTO_INCREMENT,
   `customer_id` bigint NOT NULL,
   `start_dt` date NOT NULL,
@@ -75,10 +75,10 @@ CREATE TABLE `loans` (
   `create_dt` date DEFAULT NULL,
   PRIMARY KEY (`loan_number`),
   KEY `customer_id` (`customer_id`),
-  CONSTRAINT `loan_customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE
+  CONSTRAINT `loan_customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `bankdb`.`customer` (`customer_id`) ON DELETE CASCADE
 );
 
-CREATE TABLE if not exists `cards` (
+CREATE TABLE if not exists `bankdb`.`cards` (
   `card_id` int NOT NULL AUTO_INCREMENT,
   `card_number` varchar(100) NOT NULL,
   `customer_id` bigint NOT NULL,
@@ -89,10 +89,10 @@ CREATE TABLE if not exists `cards` (
   `create_dt` date DEFAULT NULL,
   PRIMARY KEY (`card_id`),
   KEY `customer_id` (`customer_id`),
-  CONSTRAINT `card_customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE);
+  CONSTRAINT `card_customer_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `bankdb`.`customer` (`customer_id`) ON DELETE CASCADE);
 
 
-CREATE TABLE if not exists `notice_details` (
+CREATE TABLE if not exists `bankdb`.`notice_details` (
   `notice_id` int NOT NULL AUTO_INCREMENT,
   `notice_summary` varchar(200) NOT NULL,
   `notice_details` varchar(500) NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE if not exists `notice_details` (
   PRIMARY KEY (`notice_id`)
 );
 
-CREATE TABLE if not exists `contact_messages` (
+CREATE TABLE if not exists `bankdb`.`contact_messages` (
   `contact_id` char(36) NOT NULL,
   `contact_name` varchar(50) NOT NULL,
   `contact_email` varchar(100) NOT NULL,
@@ -113,13 +113,13 @@ CREATE TABLE if not exists `contact_messages` (
   PRIMARY KEY (`contact_id`)
 );
 
-CREATE TABLE `authorities` (
+CREATE TABLE `bankdb`.`authorities` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `customer_id` bigint NOT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`),
-  CONSTRAINT `authorities_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+  CONSTRAINT `authorities_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `bankdb`.`customer` (`customer_id`)
 );
 
 --DROP PROCEDURE IF EXISTS `bankdb`.`CreateIndexIfNotExists` ^;
