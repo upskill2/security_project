@@ -1,0 +1,65 @@
+server:
+  servlet:
+    session:
+      timeout: 15m
+  port: 8080
+  #ssl:
+    #key-store: keystore.p12
+    #key-store-password: 123456
+    #keyStoreType: PKCS12
+    #keyAlias: tomcat
+
+logging:
+  level:
+    ROOT: INFO
+    org:
+      springframework:
+        web: INFO
+        security: ${SPRING_SECURITY_LOG_LEVEL:TRACE}
+
+  pattern:
+    console: ${LOG_PATTERN_CONSOLE:%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %magenta(%logger{15}) - %msg%n}
+
+      # Works only for 1 user in memory
+      #spring:
+      #security:
+      #user:
+    #name: ${SECURITY_USER_NAME:admin}
+    #password: ${SECURITY_USER_PASSWORD:admin}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,mappings
+
+web:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    allow-credentials: true
+
+spring:
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      format_sql: true
+      ddl-auto: update
+    show-sql: true
+  sql:
+    init:
+      mode: always
+      platform: mysql
+      data-locations: classpath:sql/data.sql
+      schema-locations: classpath:sql/schema.sql
+  datasource:
+    #separator: ^^^
+    url: jdbc:mysql://localhost:3306/bankdb
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: com.mysql.jdbc.Driver
+  security:
+    check-compromised-passwords: false
+
+

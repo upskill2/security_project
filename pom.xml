@@ -22,6 +22,7 @@
 		<module>section1</module>
 		<module>eazyschool-start</module>
 		<module>security-oauth2</module>
+		<module>section15-keycloak</module>
 	</modules>
 
 	<build>
