@@ -4,12 +4,11 @@ import com.security.course.section1.model.*;
 import com.security.course.section1.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +30,14 @@ public class CustomerService {
         return accountsRepository.findByCustomerCustomerId (customerId);
     }
 
+    public Customer findCustomerByEmail (String email) {
+        return customerRepository.findByEmail (email).orElseThrow (() -> new UsernameNotFoundException (email));
+    }
+
+    public List<Accounts> getAccountsByEmail (String email) {
+        return accountsRepository.findByCustomerEmail (email);
+    }
+
     public List<AccountTransactions> getAccountTransactions (Long customerId) {
         return accTransactionsRepository.findByCustomerCustomerIdOrderByTransactionDateDesc (customerId);
     }
@@ -46,6 +53,7 @@ public class CustomerService {
     public ContactMessages saveContact (final ContactMessages contact) {
         return contactRepository.save (contact);
     }
+
     @EntityGraph (value = "loans-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     public Optional<Customer> findByEmail (final String name) {
         return customerRepository.findByEmail (name);

@@ -92,6 +92,6 @@ INSERT INTO `bankdb`.`authorities` (`customer_id`, `name`)   VALUES (1, 'VIEWBAL
 
 --DELETE FROM `authorities`;
 
-INSERT INTO `bankdb`.`authorities` (`customer_id`, `name`)  VALUES (1, 'ROLE_USER');
+INSERT INTO `bankdb`.`authorities` (`customer_id`, `name`)  VALUES (1, 'USER');
 
-INSERT INTO `bankdb`.`authorities` (`customer_id`, `name`)  VALUES (1, 'ROLE_ADMIN');
+INSERT INTO `bankdb`.`authorities` (`customer_id`, `name`)  VALUES (1, 'ADMIN');

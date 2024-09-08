@@ -17,7 +17,8 @@ public class CardController {
     private final CustomerService customerService;
 
     @GetMapping ("/myCards")
-    public ResponseEntity<List<Cards>> getCardDetails (@RequestParam (name = "id") Long customerId) {
+    public ResponseEntity<List<Cards>> getCardDetails (@RequestParam (name = "email") String email) {
+        Long customerId = customerService.findCustomerByEmail (email).getCustomerId ();
         return customerService.getCards (customerId).isEmpty ()
                 ? ResponseEntity.noContent ().build ()
                 : ResponseEntity.ok (customerService.getCards (customerId));

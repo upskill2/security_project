@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -39,6 +40,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain (HttpSecurity http) throws Exception {
         CsrfTokenRequestAttributeHandler handler = new CsrfTokenRequestAttributeHandler ();
+        JwtAuthenticationConverter jwtC = new JwtAuthenticationConverter ();
+        jwtC.setJwtGrantedAuthoritiesConverter (new KeyCloakRoleConverter ());
 
         http
                 .cors (c -> c.configurationSource (new CorsConfigurationSource () {
@@ -60,99 +63,27 @@ public class SecurityConfig {
                         .maximumSessions (1)
                         .maxSessionsPreventsLogin (true)
                         .expiredUrl ("/expireUrl"))
-                //   .securityContext (ct -> ct.requireExplicitSave (false))
                 .sessionManagement (s -> s.sessionCreationPolicy (SessionCreationPolicy.STATELESS))
                 .requiresChannel (r -> r.anyRequest ()
                         .requiresInsecure ())
-                //.requiresSecure ())
-                //    .csrf (AbstractHttpConfigurer::disable)
                 .csrf (c -> c.csrfTokenRequestHandler (handler)
                         .ignoringRequestMatchers ("/notices", "/contact", "/actuator*", "/error",
-                                "/registerUser", "/invalidSession", "/expireUrl", "/apiLogin")
+                                "/registerUser", "/invalidSession", "/expireUrl")
                         .csrfTokenRepository (CookieCsrfTokenRepository.withHttpOnlyFalse ()))
                 .addFilterAfter (new CsrfCookieFilter (), BasicAuthenticationFilter.class)
-                .addFilterBefore (new RequestValidationFilter (), BasicAuthenticationFilter.class)
-                .addFilterAfter (new AuthoritiesLoggingFilter (), BasicAuthenticationFilter.class)
-                .addFilterAt (new AuthoritiesLoggingAtFilter (), BasicAuthenticationFilter.class)
-                .addFilterAfter (new JwtGeneratorFilter (), BasicAuthenticationFilter.class)
-                .addFilterBefore (new JwtTokenValidationFilter (), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests ((requests) -> requests
-                                .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
-                                        "/registerUser", "/invalidSession", "/expireUrl", "/apiLogin")
-                                .permitAll ()
-                                .requestMatchers ("/myBalance").hasAnyRole ("USER", "ADMIN")
-                                .requestMatchers ("/myLoans").authenticated ()
-                                .requestMatchers (
-                                        "/myAccount", "/myCards", "/user")
-                                .authenticated ()
-                        //     .anyRequest ()
-                        //    .denyAll ()
+                        .requestMatchers ("/notices", "/contact", "/actuator*", "/error",
+                                "/registerUser", "/invalidSession", "/expireUrl", "/apiLogin")
+                        .permitAll ()
+                        .requestMatchers ("/myBalance", "/myLoans").hasAnyRole ("USER", "ADMIN")
+                        .requestMatchers (
+                                "/myAccount", "/myCards", "/user")
+                        .authenticated ()
                 );
-        http.formLogin (withDefaults ());
-        http.httpBasic (a -> a.authenticationEntryPoint (new CustomBasicAuthenticationEntryPoint ()));
+        http.oauth2ResourceServer (o -> o.jwt (j -> j.jwtAuthenticationConverter (jwtC)));
         http.exceptionHandling (e -> e.accessDeniedHandler (new CustomAccessDeniedHandler ()));
 
         return http.build ();
     }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer () {
-        return new WebMvcConfigurer () {
-            @Override
-            public void addCorsMappings (CorsRegistry registry) {
-                registry.addMapping ("/**")
-                        .allowedOrigins ("*")
-                        .allowedMethods ("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE")
-                        .allowedHeaders ("Accept", "X-Access-Token", "X-Application-Name", "X-Request-Sent-Time")
-                        .allowCredentials (false)
-                        .maxAge (3600);
-            }
-        };
-    }
-
-    @Bean
-    public ObjectMapper objectMapper () {
-        ObjectMapper mapper = new ObjectMapper ();
-        mapper.registerModule (new JavaTimeModule ());
-        return mapper;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager (UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        BankUsernamePwdAuthenticationProvider authenticationProvider = new BankUsernamePwdAuthenticationProvider (userDetailsService, passwordEncoder);
-        ProviderManager manager = new ProviderManager (authenticationProvider);
-        manager.setEraseCredentialsAfterAuthentication (false);
-        return manager;
-    }
-
-/*    @Bean
-    public UserDetailsService userDetailsService () {
-        final UserDetails user = User.withUsername ("user").password ("{noop}user").authorities ("read").build ();
-        final UserDetails admin = User.withUsername ("admin")
-                .password ("{bcrypt}$2a$12$AN28eCW1X51cSYHyJWYrcewLCyzKKKs9DSHv.7/ANvmmXTwHeZAm2")
-                .authorities ("admin").build ();
-        return new InMemoryUserDetailsManager (user, admin);
-    }*/
-
-/*    @Bean
-    public UserDetailsService userDetailsService (DataSource dataSource) {
-        return new JdbcUserDetailsManager (dataSource);
-    }*/
-
-    @Bean
-    public PasswordEncoder passwordEncoder () {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder ();
-    }
-
-    @Bean
-    @ConditionalOnProperty (
-            matchIfMissing = true,
-            prefix = "spring.security",
-            value = "check-compromised-passwords",
-            havingValue = "true")
-    public CompromisedPasswordChecker compromisedPasswordChecker () {
-        return new HaveIBeenPwnedRestApiPasswordChecker ();
-    }
-
 
 }

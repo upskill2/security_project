@@ -3,11 +3,11 @@ server:
     session:
       timeout: 15m
   port: 8080
-  #ssl:
+    #ssl:
     #key-store: keystore.p12
     #key-store-password: 123456
     #keyStoreType: PKCS12
-    #keyAlias: tomcat
+  #keyAlias: tomcat
 
 logging:
   level:
@@ -23,7 +23,7 @@ logging:
       # Works only for 1 user in memory
       #spring:
       #security:
-      #user:
+    #user:
     #name: ${SECURITY_USER_NAME:admin}
     #password: ${SECURITY_USER_PASSWORD:admin}
 
@@ -60,6 +60,10 @@ spring:
     password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.jdbc.Driver
   security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/realms/bank-dev/protocol/openid-connect/certs
     check-compromised-passwords: false
 
 

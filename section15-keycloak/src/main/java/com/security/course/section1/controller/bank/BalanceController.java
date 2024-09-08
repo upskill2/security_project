@@ -17,7 +17,9 @@ public class BalanceController {
     private final CustomerService customerService;
 
     @GetMapping ("/myBalance")
-    public ResponseEntity<List<AccountTransactions>> getBalance (@RequestParam(name = "id") Long customerId) {
+    public ResponseEntity<List<AccountTransactions>> getBalance (@RequestParam (name = "email") String email) {
+        Long customerId = customerService.findCustomerByEmail (email).getCustomerId ();
+
         return customerService.getAccountTransactions (customerId).isEmpty ()
                 ? ResponseEntity.noContent ().build ()
                 : ResponseEntity.ok (customerService.getAccountTransactions (customerId));

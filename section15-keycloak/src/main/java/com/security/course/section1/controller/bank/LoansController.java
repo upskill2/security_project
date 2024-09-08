@@ -20,7 +20,8 @@ public class LoansController {
 
     @GetMapping ("/myLoans")
     @PostAuthorize ("hasRole('ADMIN')")
-    public ResponseEntity<List<Loans>> getLoans (@RequestParam (name = "id") Long customerId) {
+    public ResponseEntity<List<Loans>> getLoans (@RequestParam (name = "email") String email) {
+        Long customerId = customerService.findCustomerByEmail (email).getCustomerId ();
         final ResponseEntity<List<Loans>> listResponseEntity = customerService.getLoans (customerId).isEmpty ()
                 ? ResponseEntity.noContent ().build ()
                 : ResponseEntity.ok (customerService.getLoans (customerId));

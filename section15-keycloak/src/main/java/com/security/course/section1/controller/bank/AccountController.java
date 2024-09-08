@@ -17,10 +17,10 @@ public class AccountController {
     private final CustomerService customerService;
 
     @GetMapping ("/myAccount")
-    public ResponseEntity<List<Accounts>> getAccountDetails (@RequestParam (name = "id") Long customerId) {
-        return customerService.getAccounts (customerId).isEmpty ()
+    public ResponseEntity<List<Accounts>> getAccountDetails (@RequestParam (name = "email") String email) {
+        return customerService.getAccountsByEmail (email).isEmpty ()
                 ? ResponseEntity.noContent ().build ()
-                : ResponseEntity.ok (customerService.getAccounts (customerId));
+                : ResponseEntity.ok (customerService.getAccountsByEmail (email));
     }
 
 }
