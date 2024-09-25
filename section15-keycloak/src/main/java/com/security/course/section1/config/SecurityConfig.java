@@ -60,7 +60,7 @@ public class SecurityConfig {
                 }))
                 .sessionManagement (s -> s.invalidSessionUrl ("/invalidSession")
                         .sessionFixation (s1 -> s1.newSession ())
-                        .maximumSessions (1)
+                        .maximumSessions (10)
                         .maxSessionsPreventsLogin (true)
                         .expiredUrl ("/expireUrl"))
                 .sessionManagement (s -> s.sessionCreationPolicy (SessionCreationPolicy.STATELESS))

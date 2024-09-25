@@ -58,7 +58,7 @@ spring:
     url: jdbc:mysql://localhost:3306/bankdb
     username: ${DB_USER:root}
     password: ${DB_PASSWORD:root}
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   security:
     oauth2:
       resourceserver:
